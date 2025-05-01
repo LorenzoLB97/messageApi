@@ -3,59 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blog - Articoli</title>
+  <title>Il mio blog</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background-color: #f5f5f5; }
+    .article, .form-section {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .date { color: gray; font-size: 0.9em; margin-bottom: 8px; }
+    .title { font-size: 1.4em; font-weight: bold; margin-bottom: 5px; }
+    .author { font-style: italic; color: #555; margin-bottom: 10px; }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; }
+    button { padding: 8px 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
 </head>
 <body>
-  <h1>Blog personale</h1>
+  <h1>Il mio blog</h1>
 
-  <h2>Nuovo articolo</h2>
-  <form id="articleForm">
-    <input type="text" id="title" placeholder="Titolo" required />
-    <br />
-    <textarea id="content" placeholder="Contenuto" required></textarea>
-    <br />
-    <button type="submit">Pubblica</button>
-  </form>
+  <!-- Form per creare un nuovo articolo -->
+  <div class="form-section">
+    <h2>Crea un nuovo articolo</h2>
+    <form id="article-form">
+      <label>Titolo</label>
+      <input type="text" id="title" required />
+      <label>Autore</label>
+      <input type="text" id="author" required />
+      <label>Contenuto</label>
+      <textarea id="content" rows="5" required></textarea>
+      <button type="submit">Pubblica</button>
+    </form>
+  </div>
 
-  <h2>Articoli pubblicati</h2>
-  <ul id="articleList"></ul>
+  <!-- Sezione articoli -->
+  <div id="articles-container"></div>
 
   <script>
-    const API_URL = "http://localhost:8080/api/articles";
+    async function loadArticles() {
+      try {
+        const res = await fetch('http://localhost:8080/api/articles');
+        const articles = await res.json();
+        const container = document.getElementById('articles-container');
+        container.innerHTML = '';
 
-    // Carica articoli all'avvio
-    fetch(API_URL)
-      .then(response => response.json())
-      .then(articles => {
-        const list = document.getElementById("articleList");
-        articles.forEach(article => {
-          const li = document.createElement("li");
-          li.textContent = `${article.title} - ${new Date(article.createdAt).toLocaleString()}`;
-          list.appendChild(li);
+        articles.reverse().forEach(article => {
+          const div = document.createElement('div');
+          div.className = 'article';
+          div.innerHTML = `
+            <div class="title">${article.title}</div>
+            <div class="author">di ${article.author}</div>
+            <div class="date">${new Date(article.createdAt).toLocaleString('it-IT')}</div>
+            <div class="content">${article.content}</div>
+          `;
+          container.appendChild(div);
         });
-      });
+      } catch (error) {
+        console.error('Errore durante il fetch degli articoli:', error);
+      }
+    }
 
-    // Invia nuovo articolo
-    document.getElementById("articleForm").addEventListener("submit", function (e) {
+    // Gestione invio form
+    document.getElementById('article-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const title = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+      const content = document.getElementById('content').value;
 
-      const title = document.getElementById("title").value;
-      const content = document.getElementById("content").value;
-
-      fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content })
-      })
-        .then(response => response.json())
-        .then(article => {
-          const list = document.getElementById("articleList");
-          const li = document.createElement("li");
-          li.textContent = `${article.title} - ${new Date(article.createdAt).toLocaleString()}`;
-          list.appendChild(li);
-          document.getElementById("articleForm").reset();
+      try {
+        const res = await fetch('http://localhost:8080/api/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, author, content })
         });
+
+        if (res.ok) {
+          document.getElementById('article-form').reset();
+          await loadArticles();
+        } else {
+          alert('Errore durante la pubblicazione dell\'articolo');
+        }
+      } catch (error) {
+        console.error('Errore durante il POST:', error);
+      }
     });
+
+    loadArticles();
   </script>
 </body>
 </html>
