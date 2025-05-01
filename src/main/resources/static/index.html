@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blog - Articoli</title>
+</head>
+<body>
+  <h1>Blog personale</h1>
+
+  <h2>Nuovo articolo</h2>
+  <form id="articleForm">
+    <input type="text" id="title" placeholder="Titolo" required />
+    <br />
+    <textarea id="content" placeholder="Contenuto" required></textarea>
+    <br />
+    <button type="submit">Pubblica</button>
+  </form>
+
+  <h2>Articoli pubblicati</h2>
+  <ul id="articleList"></ul>
+
+  <script>
+    const API_URL = "http://localhost:8080/api/articles";
+
+    // Carica articoli all'avvio
+    fetch(API_URL)
+      .then(response => response.json())
+      .then(articles => {
+        const list = document.getElementById("articleList");
+        articles.forEach(article => {
+          const li = document.createElement("li");
+          li.textContent = `${article.title} - ${new Date(article.createdAt).toLocaleString()}`;
+          list.appendChild(li);
+        });
+      });
+
+    // Invia nuovo articolo
+    document.getElementById("articleForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content })
+      })
+        .then(response => response.json())
+        .then(article => {
+          const list = document.getElementById("articleList");
+          const li = document.createElement("li");
+          li.textContent = `${article.title} - ${new Date(article.createdAt).toLocaleString()}`;
+          list.appendChild(li);
+          document.getElementById("articleForm").reset();
+        });
+    });
+  </script>
+</body>
+</html>

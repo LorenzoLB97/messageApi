@@ -1,42 +1,49 @@
 <!DOCTYPE html>
+<meta charset="UTF-8">
 <html>
 <head>
-  <title>Message API Test</title>
+  <title>Blog Test</title>
 </head>
 <body>
-  <h1>Test API - Message</h1>
+  <h1>Blog - Message</h1>
 
-  <input type="text" id="messageInput" placeholder="Scrivi un messaggio..." />
-  <button onclick="sendMessage()">Invia</button>
+  <input type="text" id="authorInput" placeholder="Autore..." />
+  <input type="text" id="messageInput" placeholder="Messaggio..." />
+  <button onclick="sendMessage()">Invia</button>  
 
   <h2>Messaggi salvati:</h2>
   <ul id="messages"></ul>
 
   <script>
-    async function loadMessages() {
-      const res = await fetch('/api/messages');
-      const messages = await res.json();
-      const ul = document.getElementById('messages');
-      ul.innerHTML = '';
-      messages.forEach(msg => {
-        const li = document.createElement('li');
-        li.textContent = msg.text;
-        ul.appendChild(li);
-      });
-    }
-
     async function sendMessage() {
-      const text = document.getElementById('messageInput').value;
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-      document.getElementById('messageInput').value = '';
-      loadMessages();
+        const text = document.getElementById('messageInput').value //questo serve a prendere i dati inseriti nei campi;
+        const author = document.getElementById('authorInput').value;
+
+        await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, author })
+        });
+
+        document.getElementById('messageInput').value = '' //svuota i campi;
+        document.getElementById('authorInput').value = '';
+        loadMessages(); //ricarica i messaggi aggiornati
     }
 
-    loadMessages();
+    async function loadMessages() {
+        const res = await fetch('/api/messages');
+        const messages = await res.json();
+        const ul = document.getElementById('messages');
+        ul.innerHTML = '' //pulisce l'elenco prima di ricaricare i dati;
+        messages.forEach(msg => {
+            const li = document.createElement('li');
+            const date = new Date(msg.timestamp);
+            const formatted = date.toLocaleString(); // es: "29/04/2025, 18:20"
+            li.textContent = `${formatted} — ${msg.author}: ${msg.text}`;
+            ul.appendChild(li);
+        });
+
+    }
   </script>
 </body>
 </html>

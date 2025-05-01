@@ -1,10 +1,10 @@
-package com.lorenzolobrutto.messageapi;
+package com.lorenzolobrutto.blog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MessageApiApplicationTests {
+class BlogApplicationTests {
 
 	@Test
 	void contextLoads() {

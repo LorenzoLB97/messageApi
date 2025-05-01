@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.lorenzolobrutto</groupId>
-	<artifactId>messageapi</artifactId>
+	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MessageApi</name>
+	<name>blog</name>
 	<description>Demo Java Web Application</description>
 	<url/>
 	<licenses>
