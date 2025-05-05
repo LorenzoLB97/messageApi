@@ -14,6 +14,9 @@ public class ArticleService {
     private ArticleRepository articleRepository;
 
     public Article saveArticle(Article article) {
+        if (article.getCreatedAt() == null) {
+            article.setCreatedAt(java.time.LocalDateTime.now());
+        }
         return articleRepository.save(article);
     }
 
