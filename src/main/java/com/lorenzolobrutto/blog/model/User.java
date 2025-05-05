@@ -24,11 +24,23 @@ public class User {
         this.username = username;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public ArrayList<Role> getRoles() {
         return new ArrayList<Role>(roles);
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

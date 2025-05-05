@@ -1,4 +1,5 @@
 package com.lorenzolobrutto.blog.security;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,15 +15,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-        .authorizeRequests(authorizeRequests ->
-            authorizeRequests
-                .anyRequest().permitAll()  // Permette l'accesso a tutte le pagine senza autenticazione
-        );
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/**", "/profile/**").authenticated()
+                        .anyRequest().permitAll())
+                .formLogin(form -> form
+                        .permitAll())
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }
 
-     @Bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

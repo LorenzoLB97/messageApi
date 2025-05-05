@@ -16,12 +16,12 @@ public class HomePageController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public String home() {
-        return "index.html"; // solo il nome se stai in static, oppure "home" se in templates
+        return "index"; // solo il nome se stai in static, oppure "home" se in templates
     }
 
-     @GetMapping("/getAllArticles")
+    @GetMapping("/getAllArticles")
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
