@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termosifone's Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
@@ -77,26 +76,31 @@
 
             <div sec:authorize="isAuthenticated()">
                 <!-- dentro il tuo template index.html -->
-                <button 
-                sec:authorize="hasRole('ROLE_ADMIN')" 
-                onclick="location.href='/admin/articles/new'">
-                Post an article
+                <button sec:authorize="hasRole('ROLE_ADMIN')" onclick="location.href='/admin/articles/new'">
+                    Post an article
                 </button>
             </div>
 
             <div sec:authorize="isAuthenticated()">
                 <p>Ruoli:</p>
                 <ul>
-                  <li th:each="ga : ${#authentication.authorities}"
-                      th:text="${ga.authority}">
-                  </li>
+                    <li th:each="ga : ${#authentication.authorities}" th:text="${ga.authority}">
+                    </li>
                 </ul>
-              </div>
-              
+            </div>
 
             <div class="auth-links absolute top-0 right-0 flex space-x-4 text-gray-700">
                 <a href="/auth/signup" class="font-medium">Sign Up</a>
                 <a href="/auth/login" class="font-medium">Login</a>
+
+                <!-- Logout mostrato solo se autenticato -->
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="font-medium hover:underline">
+                        Logout
+                    </button>
+                </form>
+
             </div>
 
             <div class="flex flex-col items-center text-center">

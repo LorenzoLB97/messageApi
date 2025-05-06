@@ -25,7 +25,10 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login") // dove invia il form
                         .defaultSuccessUrl("/", true) // dove vai dopo il login
                         .permitAll())
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll());
 
         return http.build();
     }
