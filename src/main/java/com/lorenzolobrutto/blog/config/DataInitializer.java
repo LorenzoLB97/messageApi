@@ -1,6 +1,11 @@
 package com.lorenzolobrutto.blog.config;
 
 import com.lorenzolobrutto.blog.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +46,11 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
 
             System.out.println("Admin user created with username: admin and password: admin");
+            System.out.println("GGGGGGGG ADMIN: " + admin.getUsername() + " ");
+
+            for (Role role : admin.getRoles()) {
+                System.out.println("ROLE: " + role.getName());
+            }            
         }
     }
 }

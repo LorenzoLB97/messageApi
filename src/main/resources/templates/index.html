@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Termosifone's Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
@@ -64,8 +65,35 @@
 
 <body class="min-h-screen">
     <div class="container mx-auto px-4 py-8">
+
         <!-- Header -->
         <header class="mb-8 relative">
+
+            <!-- Mostra solo se l'utente è autenticato -->
+            <div sec:authorize="isAuthenticated()">
+                Ciao, <span sec:authentication="name"></span>!
+                Ruoli: <span th:text="${#authentication.authorities}"></span>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <!-- dentro il tuo template index.html -->
+                <button 
+                sec:authorize="hasRole('ROLE_ADMIN')" 
+                onclick="location.href='/admin/articles/new'">
+                Post an article
+                </button>
+            </div>
+
+            <div sec:authorize="isAuthenticated()">
+                <p>Ruoli:</p>
+                <ul>
+                  <li th:each="ga : ${#authentication.authorities}"
+                      th:text="${ga.authority}">
+                  </li>
+                </ul>
+              </div>
+              
+
             <div class="auth-links absolute top-0 right-0 flex space-x-4 text-gray-700">
                 <a href="/auth/signup" class="font-medium">Sign Up</a>
                 <a href="/auth/login" class="font-medium">Login</a>

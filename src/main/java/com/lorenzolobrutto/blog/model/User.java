@@ -36,9 +36,10 @@ public class User {
         return password;
     }
 
-    public ArrayList<Role> getRoles() {
-        return new ArrayList<Role>(roles);
-    }
+    // in User.java
+public Set<Role> getRoles() {
+    return roles;
+}
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;

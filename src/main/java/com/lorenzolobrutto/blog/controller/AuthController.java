@@ -56,13 +56,7 @@ public class AuthController {
     // mostra la pagina di login
     @GetMapping("/login")
     public String showLoginForm() {
+        System.out.println("GET LOGIN XXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         return "login";  // crea login.html in templates/
-    }
-
-    // (opzionale) gestisci il form di login via Spring Security
-    @PostMapping("/login")
-    public String processLogin() {
-        // lasciamo che Spring Security gestisca il login vero e proprio
-        return "redirect:/";
     }
 }
